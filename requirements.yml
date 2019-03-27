@@ -1,0 +1,14 @@
+- src: lifeofguenter.reset-locale
+  version: 2.1.2
+
+- src: yatesr.timezone
+  version: 1.0.0
+
+- src: Ginsys.nullmailer
+  version: 0.9.2
+
+- src: lifeofguenter.timesync
+  version: 0.2.0
+
+- src: lifeofguenter.nginx
+  version: 1.2.5

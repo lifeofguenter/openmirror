@@ -1,0 +1,24 @@
+---
+
+- name: install fail2ban
+  apt:
+    name: fail2ban
+    state: present
+    update_cache: yes
+    cache_valid_time: 3600
+  become: yes
+
+- name: get current fail2ban version
+  command: fail2ban-server --version
+  register: fail2ban_current
+
+- set_fact:
+    fail2ban_current_version: "{{ fail2ban_current.stdout | regex_replace('(?s)^Fail2Ban v(\\d+\\.\\d+\\.\\d+).*$', '\\1') }}"
+
+- name: add base config
+  template:
+    src: jail.local
+    dest: /etc/fail2ban/jail.local
+    mode: 0644
+  become: yes
+  notify: restart_fail2ban

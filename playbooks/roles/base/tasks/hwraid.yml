@@ -1,0 +1,23 @@
+---
+# https://hwraid.le-vert.net/wiki/DebianPackages
+
+- name: add le-vert.net apt-key
+  apt_key:
+    url: "https://hwraid.le-vert.net/debian/hwraid.le-vert.net.gpg.key"
+    state: present
+  become: yes
+
+- name: add le-vert.net apt-repo
+  apt_repository:
+    repo: deb http://hwraid.le-vert.net/{{ ansible_distribution | lower }} {{ ansible_distribution_release }} main
+    state: present
+  become: yes
+
+- name: install mega packages
+  apt:
+    name: "{{ item }}"
+    state: present
+  with_items:
+    - megacli
+    - megaraid-status
+  become: yes

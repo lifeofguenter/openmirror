@@ -1,0 +1,5 @@
+---
+
+backport_default_release: "{{ ansible_distribution_release }}-backports"
+
+virtualbox_default_release: "{{ backport_default_release }}"

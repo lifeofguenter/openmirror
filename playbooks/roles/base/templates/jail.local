@@ -1,0 +1,13 @@
+[DEFAULT]
+maxretry = 5
+bantime = 86400
+action = %(action_)s
+
+{% if fail2ban_current_version is version_compare('0.9', '<') %}
+# legacy
+[ssh]
+enabled = true
+{% else %}
+[sshd]
+enabled = true
+{% endif %}

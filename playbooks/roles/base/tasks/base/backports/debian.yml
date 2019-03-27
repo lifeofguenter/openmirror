@@ -1,0 +1,10 @@
+---
+
+- name: add backports
+  apt_repository:
+    repo: "deb http://ftp.debian.org/debian {{ ansible_distribution_release }}-backports main non-free contrib"
+    state: present
+  become: yes
+  when: ansible_lsb.id != 'Raspbian'
+
+- include: "{{ ansible_distribution | lower }}/{{ ansible_distribution_release | lower }}.yml"

@@ -1,0 +1,6 @@
+---
+
+- import_tasks: fail2ban/install.yml
+
+- import_tasks: fail2ban/munin-plugin.yml
+  when: dpkg_munin_node_check is success

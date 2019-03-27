@@ -1,0 +1,12 @@
+---
+
+- name: add backports
+  apt_repository:
+    repo: "{{ item }}"
+    state: present
+  with_items:
+    - deb http://za.archive.ubuntu.com/ubuntu/ {{ ansible_distribution_release }}-backports main restricted universe multiverse
+    - deb http://archive.canonical.com/ubuntu {{ ansible_distribution_release }} partner
+  become: yes
+
+- include: "{{ ansible_distribution | lower }}/{{ ansible_distribution_release | lower }}.yml"

@@ -1,0 +1,34 @@
+---
+
+- name: install tools from (previous) backport
+  apt:
+    name: "{{ item }}"
+    state: latest
+    update_cache: yes
+    cache_valid_time: 3600
+  with_items:
+    - jq
+    - openssl
+    - libssl-dev
+  become: yes
+
+# cerbot not yet in 16 LTS
+- name: add certbot ppa
+  apt_repository:
+    repo: 'ppa:certbot/certbot'
+    state: present
+  become: yes
+
+- name: install certbot from ppa
+  apt:
+    name: certbot
+    state: latest
+    update_cache: yes
+    cache_valid_time: 3600
+  become: yes
+
+- name: remove certbot cron
+  file:
+    path: /etc/cron.d/certbot
+    state: absent
+  become: yes

@@ -1,0 +1,16 @@
+---
+
+- name: add firewall scripts
+  template:
+    src: "{{ item }}.sh"
+    dest: /etc/network/if-up.d/{{ item }}
+    mode: 'a+x'
+  with_items:
+    - firewall-rpcbind
+  become: yes
+
+- name: trigger firewall scripts
+  command: /etc/network/if-up.d/{{ item }}
+  with_items:
+    - firewall-rpcbind
+  become: yes

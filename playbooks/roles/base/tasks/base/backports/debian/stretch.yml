@@ -1,0 +1,20 @@
+---
+
+- name: install tools from (previous) backport
+  apt:
+    name: "{{ item }}"
+    state: latest
+    update_cache: yes
+    cache_valid_time: 3600
+  with_items:
+    - certbot
+    - jq
+    - openssl
+    - libssl-dev
+  become: yes
+
+- name: remove certbot cron
+  file:
+    path: /etc/cron.d/certbot
+    state: absent
+  become: yes

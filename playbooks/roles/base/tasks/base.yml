@@ -1,0 +1,140 @@
+---
+
+- name: install useful tools
+  apt:
+    name: "{{ item }}"
+    state: present
+    update_cache: yes
+    cache_valid_time: 3600
+  with_items:
+    # http://stackoverflow.com/a/37096534/567193
+    - acl
+    - ca-certificates
+    - nano
+    - vim
+    - dialog
+    - iotop
+    - htop
+    - iftop
+    - dnstop
+    - dnsutils
+    - sysstat
+    - strace
+    - unzip
+    - zip
+    - pigz
+    - lbzip2
+    - screen
+    - telnet
+    - curl
+    - heirloom-mailx
+    - mutt
+    - rsync
+    - lrzsz
+    - python-setuptools
+    - python-dev
+    - python3-setuptools
+    - python3-dev
+    - locales-all
+    - lsof
+    - net-tools
+    - nmap
+    - traceroute
+    - mtr
+  become: yes
+
+- name: remove unuseful tools
+  apt:
+    name: "{{ item }}"
+    state: absent
+    force: yes
+    purge: yes
+  with_items:
+    - bind9
+    - bind9-doc
+    - bind9utils
+    - lwresd
+    - libnss-lwres
+  become: yes
+
+- name: remove LANG
+  replace:
+    dest: /etc/profile
+    regexp: '^export (LANG|LANGUAGE|LC_ALL)$'
+  become: yes
+
+- name: purge nullmailer
+  cron:
+    cron_file: nullmailer
+    user: root
+    name: "nullmailer purge"
+    minute: 33
+    hour: 3
+    job: "find /var/spool/nullmailer/queue/ -type f -mtime +1 -delete"
+  become: yes
+
+- stat:
+    path: /proc/sys/net/ipv4/tcp_syncookies
+  register: stat_tcp_syncookies
+  become: yes
+
+- name: enable syn-cookies
+  sysctl:
+    name: "net.ipv4.tcp_syncookies"
+    value: 1
+    sysctl_set: yes
+    state: present
+    reload: yes
+  become: yes
+  when:
+    - stat_tcp_syncookies.stat.exists
+    - stat_tcp_syncookies.stat.writeable
+
+- stat:
+    path: /proc/sys/net/ipv4/conf/all/arp_ignore
+  register: stat_arp_ignore
+  become: yes
+
+- name: optimise arp
+  sysctl:
+    name: "net.ipv4.conf.all.arp_ignore"
+    value: 1
+    sysctl_set: yes
+    state: present
+    reload: yes
+  become: yes
+  when:
+    - set_arp_ignore
+    - stat_arp_ignore.stat.exists
+    - stat_arp_ignore.stat.writeable
+
+- stat:
+    path: /proc/sys/net/ipv4/conf/all/arp_announce
+  register: stat_arp_announce
+  become: yes
+
+- name: optimise arp-announce
+  sysctl:
+    name: "net.ipv4.conf.all.arp_announce"
+    value: 2
+    sysctl_set: yes
+    state: present
+    reload: yes
+  become: yes
+  when:
+    - stat_arp_announce.stat.exists
+    - stat_arp_announce.stat.writeable
+
+- name: harden sshd
+  lineinfile:
+    dest: /etc/ssh/sshd_config
+    regexp: "^#?{{ item }} "
+    line: "{{ item }} no"
+  with_items:
+    - PasswordAuthentication
+    - PermitRootLogin
+    - UseDNS
+    - DebianBanner
+    - PrintLastLog
+  notify: restart_sshd
+  become: yes

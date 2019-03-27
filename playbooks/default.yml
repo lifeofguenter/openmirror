@@ -1,0 +1,26 @@
+---
+
+- name: provision openmirror node
+
+  hosts: "{{ hosts_group | default('all') }}"
+
+  vars:
+
+    # base-role
+    enable_fail2ban: 1
+    ses_hostname: email-smtp.eu-west-1.amazonaws.com
+    ses_username: "{{ lookup('env','SES_USERNAME') }}"
+    ses_password: "{{ lookup('env','SES_PASSWORD') }}"
+    admin_addr_to: bofh@9jkh.co.za
+    default_nullmailer_me: "{{ hostname }}"
+    default_nullmailer_remotes:
+      - "{{ ses_hostname }} smtp --port=587 --starttls --user={{ ses_username }} --pass={{ ses_password }}"
+    default_nullmailer_adminaddr: "{{ admin_addr_to }}"
+
+  tasks:
+
+    - import_role:
+        name: base
+
+    - import_role:
+        name: lifeofguenter.nginx

@@ -1,0 +1,20 @@
+---
+
+- name: Set MAILADDR
+  lineinfile:
+    dest: /etc/mdadm/mdadm.conf
+    regexp: ^MAILADDR
+    line: "MAILADDR {{ admin_addr_to }}"
+  become: yes
+
+- name: Set MAILFROM
+  lineinfile:
+    dest: /etc/mdadm/mdadm.conf
+    regexp: ^MAILFROM
+    line: "MAILFROM {{ admin_addr_from }}"
+  become: yes
+
+# does not exist?
+#- name: Reload service
+#  service: name=mdadm state=reloaded
+#  become: yes
