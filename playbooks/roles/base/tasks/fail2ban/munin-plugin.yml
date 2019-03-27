@@ -1,0 +1,9 @@
+---
+
+- name: add fail2ban plugin
+  file:
+    src: /usr/share/munin/plugins/fail2ban
+    dest: /etc/munin/plugins/fail2ban
+    state: link
+  notify: restart_munin_node
+  become: yes

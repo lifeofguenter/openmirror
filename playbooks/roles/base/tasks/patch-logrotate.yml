@@ -1,0 +1,8 @@
+---
+
+- name: patch logrotate
+  template:
+    src: logrotate.sh
+    dest: /etc/cron.daily/logrotate
+    mode: 'a+x'
+  become: yes

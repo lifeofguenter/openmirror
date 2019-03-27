@@ -1,0 +1,56 @@
+---
+
+- name: install deps
+  apt:
+    name: "{{ item }}"
+    state: present
+    update_cache: yes
+    cache_valid_time: 3600
+  with_items:
+    - dnsutils
+    - dbus
+  become: yes
+
+- name: try to resolve hostname
+  command: dig +short {{ hostname }}
+  register: hostname_ip
+  ignore_errors: yes
+
+- name: update hosts file
+  lineinfile:
+    dest: /etc/hosts
+    regexp: '^127\.0\.1\.1'
+    state: absent
+  become: yes
+
+- name: update hosts file
+  lineinfile:
+    dest: /etc/hosts
+    regexp: "^#?{{ hostname_ip.stdout }}"
+    line: "{{ hostname_ip.stdout }} {{ hostname }}"
+    state: present
+  when: hostname_ip.stdout != ''
+  become: yes
+
+- name: update hosts file
+  lineinfile:
+    dest: /etc/hosts
+    regexp: '^#?127\.0\.1\.1'
+    line: "127.0.1.1 {{ hostname }}"
+    state: present
+  when: hostname_ip.stdout == ''
+  become: yes
+
+- name: set hostname
+  hostname:
+    name: "{{ hostname }}"
+  notify: restart_rsyslog
+  become: yes
+
+- name: update /etc/hostname
+  copy:
+    content: |
+      {{ hostname }}
+    dest: /etc/hostname
+    mode: 0644
+  become: yes

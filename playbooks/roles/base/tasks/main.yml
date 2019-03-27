@@ -1,0 +1,44 @@
+---
+
+- import_tasks: pre.yml
+
+- import_tasks: base.yml
+
+- include_tasks: base/backports/{{ ansible_distribution | lower }}.yml
+
+- import_tasks: pip.yml
+
+- import_tasks: hostname.yml
+
+- import_tasks: munin-node.yml
+  when: munin_server is defined
+
+- name: check if munin-node is installed
+  command: dpkg -L munin-node
+  register: dpkg_munin_node_check
+  ignore_errors: yes
+
+- name: check if mdadm is installed
+  command: dpkg -L mdadm
+  register: dpkg_mdadm_check
+  ignore_errors: yes
+
+- name: check for megaraid
+  shell: lspci | grep -i megaraid
+  register: megaraid_pci
+  ignore_errors: yes
+
+- import_tasks: hwraid.yml
+  when: megaraid_pci is success
+
+- import_tasks: swraid.yml
+  when: dpkg_mdadm_check is success
+
+- import_tasks: smart.yml
+
+- import_tasks: fail2ban.yml
+  when: enable_fail2ban is defined
+
+- import_tasks: firewall.yml
+
+- import_tasks: patch-logrotate.yml

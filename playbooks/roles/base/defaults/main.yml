@@ -1,0 +1,21 @@
+---
+
+ses_hostname: email-smtp.eu-west-1.amazonaws.com
+
+admin_addr_to: bofh@openmirror.fi
+
+default_nullmailer_defaulthost: openmirror.fi
+
+default_nullmailer_me: "{{ hostname }}"
+
+default_nullmailer_remotes:
+  - "{{ ses_hostname }} smtp --port=587 --starttls --user={{ ses_username }} --pass={{ ses_password }}"
+
+default_nullmailer_adminaddr: "{{ admin_addr_to }}"
+
+munin_server: 159.69.47.94
+
+authorized_users:
+  - lifeofguenter
+
+set_arp_ignore: yes

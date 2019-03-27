@@ -1,0 +1,14 @@
+---
+
+- name: fetch get-pip.py
+  get_url:
+    url: https://bootstrap.pypa.io/get-pip.py
+    dest: /tmp
+
+- name: install pip3
+  command: python3 /tmp/get-pip.py
+  become: yes
+
+- name: install pip2
+  command: python2 /tmp/get-pip.py
+  become: yes

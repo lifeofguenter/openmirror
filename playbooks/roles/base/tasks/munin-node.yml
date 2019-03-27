@@ -1,0 +1,105 @@
+---
+
+- name: install munin-node
+  apt:
+    name: munin-node
+    state: present
+    update_cache: yes
+    cache_valid_time: 3600
+  become: yes
+
+- name: get hostname
+  command: hostname
+  register: node_hostname
+
+- name: get ifname
+  shell: ip route get 8.8.8.8 | grep -oP 'dev \K\w+'
+  register: node_ifname
+
+- name: configure log_level
+  lineinfile:
+    dest: /etc/munin/munin-node.conf
+    state: present
+    regexp: '^log_level'
+    line: 'log_level 3'
+  become: yes
+  notify: restart_munin_node
+
+- name: configure allow
+  lineinfile:
+    dest: /etc/munin/munin-node.conf
+    state: present
+    regexp: '^allow'
+    insertafter: '^allow'
+    line: 'allow ^{{ munin_server|replace(".", "\.") }}$'
+  become: yes
+  notify: restart_munin_node
+
+- name: configure host_name
+  lineinfile:
+    dest: /etc/munin/munin-node.conf
+    state: present
+    regexp: '^#?host_name'
+    line: 'host_name {{ node_hostname.stdout }}'
+  become: yes
+  notify: restart_munin_node
+
+- name: configure host
+  lineinfile:
+    dest: /etc/munin/munin-node.conf
+    state: present
+    regexp: '^host \*'
+    line: 'host *'
+  become: yes
+  notify: restart_munin_node
+
+- name: configure port
+  lineinfile:
+    dest: /etc/munin/munin-node.conf
+    state: present
+    regexp: '^port'
+    line: 'port 4949'
+  become: yes
+  notify: restart_munin_node
+
+- name: check if purge needed
+  stat:
+    path: /etc/munin/ansible_munin_plugins_purged
+  register: munin_plugins_purge
+
+- name: purge munin plugins
+  shell: rm /etc/munin/plugins/*
+  when: munin_plugins_purge.stat.exists == False
+  become: yes
+  notify: restart_munin_node
+
+- name: block further purging
+  file:
+    path: /etc/munin/ansible_munin_plugins_purged
+    state: touch
+    mode: 0644
+  become: yes
+
+- name: Add base plugins
+  file:
+    src: /usr/share/munin/plugins/{{ item }}
+    dest: /etc/munin/plugins/{{ item }}
+    state: link
+  with_items:
+    - cpu
+    - load
+    - df
+    - df_inode
+    - diskstats
+    - fw_packets
+    - memory
+  become: yes
+  notify: restart_munin_node
+
+- name: add if plugin
+  file:
+    src: /usr/share/munin/plugins/if_
+    dest: /etc/munin/plugins/if_{{ node_ifname.stdout }}
+    state: link
+  become: yes
+  notify: restart_munin_node

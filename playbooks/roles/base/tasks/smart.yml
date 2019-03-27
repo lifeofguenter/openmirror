@@ -1,0 +1,32 @@
+---
+
+- name: install smartmontools
+  apt:
+    name: smartmontools
+    state: present
+    update_cache: yes
+    cache_valid_time: 3600
+  become: yes
+
+- name: enable smartd
+  lineinfile:
+    dest: /etc/default/smartmontools
+    regexp: "^#?start_smartd"
+    line: "start_smartd=yes"
+  notify: restart_smartmontools
+  become: yes
+
+- name: add custom mailer script
+  template:
+    src: 10mail.sh
+    dest: /etc/smartmontools/run.d/10mail
+    mode: "a+x"
+  notify: restart_smartmontools
+  become: yes
+
+- name: configure smartd
+  template:
+    src: smartd.conf
+    dest: /etc/smartd.conf
+  notify: restart_smartmontools
+  become: yes

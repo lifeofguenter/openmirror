@@ -1,0 +1,35 @@
+---
+
+galaxy_info:
+  author: Gunter Grodotzki
+  description: base role
+  company: openmirror
+  license: GPLv3
+  min_ansible_version: 2.7
+  platforms:
+    - name: Ubuntu
+      versions:
+        - xenial
+    - name: Debian
+      versions:
+        - stretch
+  galaxy_tags:
+    - system
+dependencies:
+  - src: lifeofguenter.reset-locale
+    version: 2.1.2
+
+  - src: yatesr.timezone
+    version: 1.0.0
+
+  - src: Ginsys.nullmailer
+    version: 0.9.2
+    vars:
+      nullmailer_defaulthost: "{{ default_nullmailer_defaulthost }}"
+      nullmailer_me: "{{ default_nullmailer_me }}"
+      nullmailer_remotes: "{{ default_nullmailer_remotes }}"
+      nullmailer_adminaddr: "{{ default_nullmailer_adminaddr }}"
+    when: ses_password is defined and ses_username is defined
+
+  - src: lifeofguenter.timesync
+    version: 0.2.0
