@@ -1,0 +1,35 @@
+---
+
+- name: add sudoers
+  template:
+    src: sudoers.conf
+    dest: /etc/sudoers.d/administrators
+    validate: 'visudo -cf %s'
+    mode: 0440
+  become: yes
+
+- name: add administrators group
+  group:
+    name: administrators
+    state: present
+  become: yes
+
+- name: add users
+  user:
+    name: "{{ item.name }}"
+    home: /home/{{ item.name }}
+    createhome: yes
+    shell: /bin/bash
+    groups:
+      - administrators
+    append: yes
+  with_items: "{{ authorized_users }}"
+  become: yes
+
+- name: authorize users (via github)
+  authorized_key:
+    user: "{{ item.name }}"
+    state: present
+    key: https://github.com/{{ item.gh_user }}.keys
+  with_items: "{{ authorized_users }}"
+  become: yes

@@ -12,22 +12,6 @@
 - name: update facts
   setup:
 
-- name: authorize users (via github)
-  authorized_key:
-    user: "{{ ansible_user }}"
-    state: present
-    key: https://github.com/{{ item }}.keys
-  with_items: "{{ authorized_users }}"
-  when:
-    - authorized_users is defined
-    - authorized_users | length > 0
-
-- name: authorize users (manual)
-  authorized_key:
-    user: "{{ ansible_user }}"
-    state: present
-    key: ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAICaDe+YKBYK9jocuJe3TvoUvsK+UK6GW1NUiTF8EciBN sudo@9JKH
-
 - name: upgrade system
   apt:
     upgrade: dist

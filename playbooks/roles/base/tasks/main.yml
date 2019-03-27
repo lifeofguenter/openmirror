@@ -4,6 +4,11 @@
 
 - import_tasks: base.yml
 
+- import_tasks: lusers.yml
+  when:
+    - authorized_users is defined
+    - authorized_users | length > 0
+
 - include_tasks: base/backports/{{ ansible_distribution | lower }}.yml
 
 - import_tasks: pip.yml
