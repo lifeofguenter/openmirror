@@ -16,6 +16,7 @@ default_nullmailer_adminaddr: "{{ admin_addr_to }}"
 munin_server: 159.69.47.94
 
 authorized_users:
-  - lifeofguenter
+  - name: gunterg
+    gh_user: lifeofguenter
 
 set_arp_ignore: yes
