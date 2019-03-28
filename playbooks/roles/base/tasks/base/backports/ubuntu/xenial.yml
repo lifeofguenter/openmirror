@@ -2,14 +2,13 @@
 
 - name: install tools from (previous) backport
   apt:
-    name: "{{ item }}"
+    name:
+      - jq
+      - openssl
+      - libssl-dev
     state: latest
     update_cache: yes
     cache_valid_time: 3600
-  with_items:
-    - jq
-    - openssl
-    - libssl-dev
   become: yes
 
 # cerbot not yet in 16 LTS

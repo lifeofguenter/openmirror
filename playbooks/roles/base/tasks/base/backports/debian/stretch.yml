@@ -2,15 +2,14 @@
 
 - name: install tools from (previous) backport
   apt:
-    name: "{{ item }}"
+    name:
+      - certbot
+      - jq
+      - openssl
+      - libssl-dev
     state: latest
     update_cache: yes
     cache_valid_time: 3600
-  with_items:
-    - certbot
-    - jq
-    - openssl
-    - libssl-dev
   become: yes
 
 - name: remove certbot cron

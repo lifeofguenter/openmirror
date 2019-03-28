@@ -6,15 +6,14 @@
 
 - name: install tools from backport
   apt:
-    name: "{{ item }}"
+    name:
+      - jq
+      - openssl
+      - libssl-dev
     default_release: "{{ backport_default_release }}"
     state: latest
     update_cache: yes
     cache_valid_time: 3600
-  with_items:
-    - jq
-    - openssl
-    - libssl-dev
   become: yes
 
 # certbot not available on rasbian-jessie
