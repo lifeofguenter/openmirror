@@ -2,11 +2,10 @@
 
 - name: bare minimum
   apt:
-    name: "{{ item }}"
+    name:
+      - apt-transport-https
+      - lsb-release
     state: present
-  with_items:
-    - apt-transport-https
-    - lsb-release
   become: yes
 
 - name: update facts

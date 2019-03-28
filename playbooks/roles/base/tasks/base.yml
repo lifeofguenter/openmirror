@@ -2,59 +2,57 @@
 
 - name: install useful tools
   apt:
-    name: "{{ item }}"
+    name:
+      # http://stackoverflow.com/a/37096534/567193
+      - acl
+      - ca-certificates
+      - nano
+      - vim
+      - dialog
+      - iotop
+      - htop
+      - iftop
+      - dnstop
+      - dnsutils
+      - sysstat
+      - strace
+      - unzip
+      - zip
+      - pigz
+      - lbzip2
+      - screen
+      - telnet
+      - curl
+      - heirloom-mailx
+      - mutt
+      - rsync
+      - lrzsz
+      - python-setuptools
+      - python-dev
+      - python3-setuptools
+      - python3-dev
+      - locales-all
+      - lsof
+      - net-tools
+      - nmap
+      - traceroute
+      - mtr
     state: present
     update_cache: yes
     cache_valid_time: 3600
-  with_items:
-    # http://stackoverflow.com/a/37096534/567193
-    - acl
-    - ca-certificates
-    - nano
-    - vim
-    - dialog
-    - iotop
-    - htop
-    - iftop
-    - dnstop
-    - dnsutils
-    - sysstat
-    - strace
-    - unzip
-    - zip
-    - pigz
-    - lbzip2
-    - screen
-    - telnet
-    - curl
-    - heirloom-mailx
-    - mutt
-    - rsync
-    - lrzsz
-    - python-setuptools
-    - python-dev
-    - python3-setuptools
-    - python3-dev
-    - locales-all
-    - lsof
-    - net-tools
-    - nmap
-    - traceroute
-    - mtr
   become: yes
 
 - name: remove unuseful tools
   apt:
-    name: "{{ item }}"
+    name:
+      - bind9
+      - bind9-doc
+      - bind9utils
+      - lwresd
+      - libnss-lwres
     state: absent
     force: yes
     purge: yes
-  with_items:
-    - bind9
-    - bind9-doc
-    - bind9utils
-    - lwresd
-    - libnss-lwres
   become: yes
 
 - name: remove LANG

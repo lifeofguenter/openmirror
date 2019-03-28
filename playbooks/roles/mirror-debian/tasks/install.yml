@@ -1,0 +1,39 @@
+---
+
+- name: add mirror user
+  user:
+    name: mirror-debian
+    home: /home/mirror-debian
+    createhome: yes
+    shell: /bin/bash
+  become: yes
+
+- name: install ftpsync
+  unarchive:
+    src: https://ftp-master.debian.org/ftpsync.tar.gz
+    dest: "~"
+    remote_src: yes
+    keep_newer: yes
+  become: yes
+  become_user: mirror-debian
+
+- name: create log folder
+  file:
+    path: "~/log"
+    state: directory
+  become: yes
+  become_user: mirror-debian
+
+- name: create target folder
+  file:
+    path: /srv/mirrors/debian
+    state: directory
+    owner: mirror-debian
+  become: yes
+
+- name: add ftpsync.conf
+  template:
+    src: ftpsync.conf
+    dest: "~/distrib/etc/ftpsync.conf"
+  become: yes
+  become_user: mirror-debian

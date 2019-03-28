@@ -24,3 +24,9 @@
 
     - import_role:
         name: lifeofguenter.nginx
+
+    - import_role:
+        name: vhosts
+
+    - import_role:
+        name: mirror-debian

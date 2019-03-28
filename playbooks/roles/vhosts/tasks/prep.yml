@@ -1,0 +1,7 @@
+---
+
+- name: create main mirror folder
+  file:
+    path: /srv/mirrors
+    state: directory
+  become: yes
