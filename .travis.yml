@@ -14,8 +14,7 @@ env:
     - secure: "G8vgdZNidk1ymrAj5+7TZoI7lscKUIgq0RSSJ71pSCS1SrSaTOAXClEUYJyNBdo6J5j21OFiKiOiOjMfuXrEe024JQGwRSr89t7NXuvtby2vn7+0t79L8+J/4EVues1cku+h24bUDBPemADEuEKuuNmorMOTkB4JX6IxygF4nQz2hYJxgoagOI7AgPJwhqjOpcsQDYUwsomRIVC7At6k5aomm85weO0TIp+iMTObfvW9xVSuI4u9pkJVFf3+VEyvDfX+df1JejXXag7+kHvE3L4QFH8krXBHPgqnCtbnVvd8U+V8lz7amijCVqUTEETxREW1dQZdQm5tAEGdKHfmaj5yCVbRxgUJ1zymaxsJ2wZGI9dvie1XnvJ0qJnMWaaa72sl7/ROvIIz5Psh03dk1U/ERAMB4Oa3XR2BX31eAknF+VgoHIxYqvDnY3tQaY3vN/5R/0XrYE3jggumEMjpsY7SHzk2j0yfW21/xVdxfuWDh6qmMnEq/9sLI5NkSwZSN4K6QbBBXYuyY/raJRpZzLLSonnyXZPcfC5/TVvfkOleZEySTcM8djxoP+Zd8ntx58sHa+VwHO477rD7xyaC0JGMSDpDF3VWe0OTrM6fk7fiBV8p9+bNLbnKbLwQIhPW1LAukMzdcCxinP2ug4ps55XkvhTUv2VsQg33nNl0cWU="
 
 before_install:
-  - mkdir -p ~/.ssh/
-  - openssl aes-256-cbc -K $encrypted_e18adef837ac_key -iv $encrypted_e18adef837ac_iv -in openmirror.enc -out ~\/.ssh/openmirror -d
+  - openssl aes-256-cbc -K $encrypted_e18adef837ac_key -iv $encrypted_e18adef837ac_iv -in openmirror.enc -out ~/.ssh/openmirror -d
 
 install:
   # Install ansible
