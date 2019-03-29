@@ -37,6 +37,8 @@
       - nmap
       - traceroute
       - mtr
+      # https://github.com/neomutt/neomutt/issues/398#issuecomment-335585714
+      - gpgsm
     state: present
     update_cache: yes
     cache_valid_time: 3600
