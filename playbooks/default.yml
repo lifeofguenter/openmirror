@@ -11,7 +11,7 @@
     ses_hostname: email-smtp.eu-west-1.amazonaws.com
     ses_username: "{{ lookup('env','SES_USERNAME') }}"
     ses_password: "{{ lookup('env','SES_PASSWORD') }}"
-    admin_addr_to: bofh@9jkh.co.za
+    admin_addr_to: bofh@openmirror.fi
     default_nullmailer_me: "{{ hostname }}"
     default_nullmailer_remotes:
       - "{{ ses_hostname }} smtp --port=587 --starttls --user={{ ses_username }} --pass={{ ses_password }}"
