@@ -17,6 +17,12 @@
       - "{{ ses_hostname }} smtp --port=587 --starttls --user={{ ses_username }} --pass={{ ses_password }}"
     default_nullmailer_adminaddr: "{{ admin_addr_to }}"
 
+    # projects
+    projects:
+      - debian
+      - debian-archive
+      - debian-cd
+
   tasks:
 
     - import_role:

@@ -24,11 +24,15 @@
   become: yes
   become_user: mirror-debian
 
-- name: create target folder
+- name: create target folders
   file:
-    path: /srv/mirrors/debian
+    path: /srv/mirrors/{{ item }}
     state: directory
     owner: mirror-debian
+  with_items:
+    - debian
+    - debian-archive
+    - debian-cd
   become: yes
 
 - name: add ftpsync.conf
