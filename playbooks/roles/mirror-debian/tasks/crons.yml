@@ -1,0 +1,52 @@
+---
+
+- name: prepare crontab PATH
+  cron:
+    cron_file: mirror-debian
+    user: root
+    name: PATH
+    env: yes
+    value: /usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+  become: yes
+
+- name: prepare crontab MAIL*
+  cron:
+    cron_file: mirror-debian
+    user: root
+    name: "{{ item.key }}"
+    env: yes
+    value: "{{ item.value }}"
+  with_items:
+    - key: MAILTO
+      value: "{{ admin_addr_to }}"
+
+    - key: MAILFROM
+      value: "{{ admin_addr_from }}"
+  become: yes
+
+- name: add debian-archive job
+  cron:
+    cron_file: mirror-debian
+    user: mirror-debian
+    name: "debian-archive"
+    minute: 11
+    job: "rsync --recursive --times --links --hard-links --partial --block-size=8192 --chmod=D755,F644 --timeout 120 --log-file ~/log/rsync-debian-archive.log --quiet debian.koyanet.lv::debian-archive/ /srv/mirrors/debian-archive/ > /dev/null"
+  become: yes
+
+- name: add debian-cd job
+  cron:
+    cron_file: mirror-debian
+    user: mirror-debian
+    name: "debian-cd"
+    minute: 22
+    job: "rsync --recursive --times --links --hard-links --partial --block-size=8192 --chmod=D755,F644 --timeout 120 --log-file ~/log/rsync-debian-cd.log --quiet mirrors.dotsrc.org::debian-cd/ /srv/mirrors/debian-cd/ > /dev/null"
+  become: yes
+
+- name: add debian-cd job
+  cron:
+    cron_file: mirror-debian
+    user: mirror-debian
+    name: "debian"
+    minute: 55
+    job: "/home/mirror-debian/distrib/bin/ftpsync-cron"
+  become: yes

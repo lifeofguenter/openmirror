@@ -1,0 +1,7 @@
+---
+
+- name: nginx_reload
+  service:
+    name: nginx
+    state: reloaded
+  become: yes

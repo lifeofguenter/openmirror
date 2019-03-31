@@ -1,0 +1,8 @@
+---
+
+- name: add vhost
+  template:
+    src: vhost.conf
+    dest: /etc/nginx/vhosts/openmirror.conf
+  become: yes
+  notify: nginx_reload
