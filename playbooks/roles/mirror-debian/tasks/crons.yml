@@ -30,7 +30,7 @@
     user: mirror-debian
     name: "debian-archive"
     minute: 11
-    job: "rsync --recursive --times --links --hard-links --partial --block-size=8192 --log-file ~/log/rsync-debian-archive.log --quiet debian.koyanet.lv::debian-archive/ /srv/mirrors/debian-archive/ > /dev/null"
+    job: "rsync --recursive --times --links --hard-links --partial --block-size=8192 --chmod=D755,F644 --timeout 120 --log-file ~/log/rsync-debian-archive.log --quiet debian.koyanet.lv::debian-archive/ /srv/mirrors/debian-archive/ > /dev/null"
   become: yes
 
 - name: add debian-cd job
@@ -39,7 +39,7 @@
     user: mirror-debian
     name: "debian-cd"
     minute: 22
-    job: "rsync --recursive --times --links --hard-links --partial --block-size=8192 --log-file ~/log/rsync-debian-cd.log --quiet mirrors.dotsrc.org::debian-cd/ /srv/mirrors/debian-cd/ > /dev/null"
+    job: "rsync --recursive --times --links --hard-links --partial --block-size=8192 --chmod=D755,F644 --timeout 120 --log-file ~/log/rsync-debian-cd.log --quiet mirrors.dotsrc.org::debian-cd/ /srv/mirrors/debian-cd/ > /dev/null"
   become: yes
 
 - name: add debian-cd job
